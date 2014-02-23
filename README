@@ -1,0 +1,7 @@
+EuPathTemplateSite is adds EuPathDB management features to WDKTemplateSite.
+
+- /dashboard
+  - The build.xml activates the optional Dashboard component included with the WDK.
+  - web.xml loads org.gusdb.wdk.jmx.JmxInitListener
+    - JmxInitListener loads MBeands defined in mbeanset.properties
+

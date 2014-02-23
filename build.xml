@@ -1,0 +1,92 @@
+<project name="EuPathTemplateSite" default="Installation" basedir=".">
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  Dependencies  oooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <import file="${projectsDir}/WDKTemplateSite/build.xml" />
+  <import file="${projectsDir}/WDK/build.xml" />
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  Installation  oooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="EuPathTemplateSite-Installation" depends="
+            WDKTemplateSite-Installation">
+  </target>
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooo  Web Installation  oooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="EuPathTemplateSite-WebInstallation" depends="
+            EuPathTemplateSite-Installation,
+            EuPathTemplateSite/Site-WebInstallation,
+            WDKTemplateSite-WebInstallation">
+  </target>
+
+  <target name="EuPathTemplateSite/Site-WebInstallation" depends="
+            ProjectTree,
+            EuPathTemplateSite/Dashboard-WebInstallation">
+    <ant target="defaultWebComponentInstall">
+      <property name="project" value="EuPathTemplateSite"/>
+      <property name="component" value="Site"/>
+    </ant>
+  </target>
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- ooooooooooooooooooooooooo Dashboard Install  ooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="EuPathTemplateSite/Dashboard-WebInstallation" depends="WDK/Dashboard-WebInstallation">
+    <delete file="${webappTargetDir}/WEB-INF/web.xml" /> <!-- force install our own -->
+<!--
+    <ant target="webComponentPartCopy">
+      <property name="componentDir" value="${projectsDir}/EuPathTemplateSite"/>
+      <property name="part" value="Dashboard"/>
+      <property name="to" value="${dashboardTargetDir}"/>
+    </ant>
+    <ant target="buildInfo">
+      <property name="project" value="${project}"/>
+      <property name="component" value="Dashboard"/>
+    </ant>
+-->
+  </target>
+  
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo    Checkout    oooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="EuPathTemplateSite-ChildCheckout">
+    <available file="../WDKTemplateSite" type="dir" property="WDKTemplateSite.present" />
+    <antcall target="WDKTemplateSite-Checkout" />
+  </target>
+  
+    <target name="WDKTemplateSite-Checkout" unless="WDKTemplateSite.present"> 
+    <ant target="defaultProjectCheckout" inheritAll="false">
+      <property name="svnurl" value="https://www.cbil.upenn.edu/svn/gus/WDKTemplateSite" />
+      <property name="project" value="WDKTemplateSite"/>
+      <property name="version" value=""/>
+    </ant>
+  </target>  
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo    Update    oooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="EuPathTemplateSite-ChildUpdate" >
+    <ant target="defaultProjectUpdate">
+      <property name="project" value="WDKTemplateSite"/>
+    </ant>
+  </target>
+
+
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooo  ProjectTree  ooooooooooooooooooooooooooo -->
+  <!-- oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo -->
+
+  <target name="ProjectTree" if="${checkout}">
+    <ant target="projectCheckOut"/>
+  </target>  
+
+
+</project>
